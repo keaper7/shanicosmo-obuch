@@ -124,7 +124,7 @@ document.querySelectorAll('.js-tg').forEach(el => {
 
 /* ── Аккордеон модулей: открыт только один пункт ── */
 (() => {
-  const modules = document.querySelectorAll('#modules .acc__item');
+  const modules = document.querySelectorAll('#modules .mod');
   modules.forEach(item => {
     item.addEventListener('toggle', () => {
       if (!item.open) return;

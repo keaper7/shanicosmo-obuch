@@ -32,7 +32,6 @@
     </a>
     <nav class="hdr__nav">
       <a href="#program">Программа</a>
-      <a href="#practice">Практика</a>
       <a href="#price">Стоимость</a>
       <a href="#faq">Вопросы</a>
     </nav>
@@ -45,9 +44,11 @@
 
 <!-- ══ 01. ПЕРВЫЙ ЭКРАН ══ -->
 <section class="hero">
+  <p class="hero__ghost hero__ghost--top" aria-hidden="true">медицина и красота</p>
+  <p class="hero__ghost hero__ghost--bottom" aria-hidden="true">косметология</p>
+
   <div class="hero__grid">
     <div class="hero__text">
-      <p class="eyebrow reveal">Для медсестёр, студентов-медиков и врачей</p>
       <h1 class="hero__h1 reveal" style="--d:.08s">
         У вас уже есть<br>медицинская база.
         <em>Осталось превратить её<br>в профессию, которая&nbsp;кормит.</em>
@@ -73,8 +74,9 @@
       </p>
     </div>
 
-    <figure class="hero__ph ph ph--portrait reveal" style="--d:.2s">
-      <span class="ph__label">assets/hero-portrait.jpg</span>
+    <figure class="hero__photo reveal" style="--d:.2s">
+      <img src="assets/hero-portrait.jpg" alt="Лиана Шанибова, косметолог-эстетист" loading="eager">
+      <span class="hero__tag">6+ лет в косметологии</span>
     </figure>
   </div>
 </section>
@@ -83,8 +85,7 @@
 <section class="sec sec--tint" id="who">
   <div class="wrap">
     <p class="eyebrow reveal" data-n="02">Кто приходит</p>
-    <h2 class="h2 reveal">Скорее всего, вы читаете это<br>в ординаторской или после смены</h2>
-    <p class="lead reveal">Я знаю три истории, с которыми ко мне приходят чаще всего. Найдите свою.</p>
+    <h2 class="h2 reveal">Кому подойдет обучение</h2>
 
     <div class="cards3">
       <article class="card reveal">
@@ -130,8 +131,7 @@
 <section class="sec" id="shift">
   <div class="wrap">
     <p class="eyebrow reveal" data-n="03">Что меняется</p>
-    <h2 class="h2 reveal">Что меняется за один месяц</h2>
-    <p class="lead reveal">Не «жизнь мечты». Конкретные вещи, которые становятся другими.</p>
+    <h2 class="h2 reveal">Какие изменения вас ждут</h2>
 
     <div class="shift">
       <div class="shift__col shift__col--now">
@@ -169,8 +169,12 @@
   <div class="wrap">
     <div class="expert">
       <div class="expert__media reveal">
-        <figure class="ph ph--tall"><span class="ph__label">assets/about-portrait.jpg</span></figure>
-        <figure class="ph ph--wide expert__cab"><span class="ph__label">assets/about-cabinet.jpg</span></figure>
+        <figure class="ph ph--tall">
+          <img src="assets/about-portrait.jpg" alt="Лиана Шанибова" loading="lazy">
+        </figure>
+        <figure class="ph ph--tall expert__cab">
+          <img src="assets/about-cabinet.jpg" alt="Лиана Шанибова за рабочим столом, на стене — сертификаты" loading="lazy">
+        </figure>
       </div>
 
       <div class="expert__body">
@@ -208,117 +212,208 @@
   </div>
 </section>
 
-<!-- ══ 05. НАВЫКИ ══ -->
-<section class="sec" id="skills">
-  <div class="wrap">
-    <p class="eyebrow reveal" data-n="05">Результат</p>
-    <h2 class="h2 reveal">Что вы сможете делать руками<br>после курса</h2>
-    <p class="lead reveal">Это не список тем. Это список процедур, которые вы сможете поставить в свой прайс.</p>
-
-    <ol class="skills">
-      <li class="reveal"><b>Все виды чисток лица</b>
-        <span>Механическая, ультразвуковая, комбинированная — с разбором, кому какая и почему.</span></li>
-      <li class="reveal" style="--d:.05s"><b>Пилинги по типу и состоянию кожи</b>
-        <span>Поверхностные, срединные, всесезонные. Как подобрать и как вести кожу после.</span></li>
-      <li class="reveal" style="--d:.1s"><b>Аппаратные методики</b>
-        <span>Фракционная мезотерапия, мезороллер, карбокситерапия CO₂, криотерапия, газожидкостный пилинг, Dermadrop TDA, Heleo4.</span></li>
-      <li class="reveal" style="--d:.15s"><b>Диагностика кожи и консультация</b>
-        <span>Как провести приём онлайн и офлайн так, чтобы человек остался и вернулся.</span></li>
-      <li class="reveal" style="--d:.2s"><b>Разбор составов и подбор ухода</b>
-        <span>Активы, концентрации, совместимость. Базовый и интенсивный уход под конкретного клиента.</span></li>
-      <li class="reveal" style="--d:.25s"><b>Ведение клиента и сервис</b>
-        <span>Карта клиента, переписка, повторные записи, работа с возражениями, продажи ухода.</span></li>
-      <li class="reveal" style="--d:.3s"><b>Скульптурный и расслабляющий массаж</b>
-        <span>Постановка руки, техника, показания и противопоказания.</span></li>
-      <li class="reveal" style="--d:.35s"><b>Свой прайс и первые клиенты</b>
-        <span>Как упаковать себя, назначить цену и вести соцсети, чтобы запись была заполнена.</span></li>
-    </ol>
-  </div>
-</section>
-
-<!-- ══ 06. ПРОГРАММА ══ -->
+<!-- ══ 05. ПРОГРАММА ══ -->
 <section class="sec sec--tint" id="program">
   <div class="wrap wrap--narrow">
-    <p class="eyebrow reveal" data-n="06">Программа</p>
+    <p class="eyebrow reveal" data-n="05">Программа</p>
     <h2 class="h2 reveal">7 модулей, 31 урок</h2>
     <p class="lead reveal">Полный путь от «я ничего не умею в косметологии» до «я принимаю клиентов
-      и знаю, что делаю». Ничего не вырезано, чтобы продать отдельно.</p>
+      и знаю, что делаю».</p>
 
-    <div class="acc" id="modules">
-      <details class="acc__item" open>
-        <summary><span class="acc__n">01</span><span class="acc__t">Психология</span><span class="acc__c">5 уроков</span></summary>
-        <ol class="acc__body">
-          <li>Как пройти курс эффективно</li>
-          <li>Знакомство. Цели</li>
-          <li>Баланс жизни. Работа с мыслями, техники</li>
-          <li>Деньги в нашей жизни. Важные правила</li>
-          <li>Ваш первый шаг к идеальной коже</li>
-        </ol>
-      </details>
-
-      <details class="acc__item">
-        <summary><span class="acc__n">02</span><span class="acc__t">Кабинет косметолога</span><span class="acc__c">4 урока</span></summary>
-        <ol class="acc__body">
-          <li>Что должно быть в кабинете косметолога</li>
-          <li>Одноразовое / многоразовое</li>
-          <li>Дезинфекция, стерилизация и обработка инструментов по СанПиН</li>
-          <li>Главные атрибуты косметолога на работе</li>
-        </ol>
-      </details>
-
-      <details class="acc__item">
-        <summary><span class="acc__n">03</span><span class="acc__t">Анатомия — основа всего</span><span class="acc__c">4 урока</span></summary>
-        <ol class="acc__body">
-          <li>Теоретический фундамент. Изучаем кожу</li>
-          <li>Кожа, в которой мы живём: строение, типы и особенности</li>
-          <li>Навык успешной консультации. Диагностика кожи онлайн и офлайн</li>
-          <li>Карта клиента</li>
-        </ol>
-      </details>
-
-      <details class="acc__item">
-        <summary><span class="acc__n">04</span><span class="acc__t">Что в твоей банке?</span><span class="acc__c">3 урока</span></summary>
-        <ol class="acc__body">
-          <li>Составы косметических средств. Активы. Полный разбор ухода</li>
-          <li>Базовый и интенсивный домашний уход. Подбор средств для клиента</li>
-          <li>SPF-защита</li>
-        </ol>
-      </details>
-
-      <details class="acc__item acc__item--hl">
-        <summary><span class="acc__n">05</span><span class="acc__t">Весь спектр процедур от А до Я</span><span class="acc__c">9 тем + практика</span></summary>
-        <div class="acc__body">
-          <ol>
-            <li>Все виды чисток лица</li>
-            <li>Пилинги по типу и состоянию кожи: поверхностные, срединные, всесезонные</li>
-            <li>Аппаратная фракционная мезотерапия</li>
-            <li>Мезороллер / микроигольчатая терапия</li>
-            <li>Скульптурный и расслабляющий массажи</li>
-            <li>Газожидкостный пилинг кожи головы</li>
-            <li>Аппаратные процедуры: Dermadrop TDA, Heleo4</li>
-            <li>Карбокситерапия CO₂</li>
-            <li>Криотерапия / холодный азот</li>
-          </ol>
-          <p class="acc__plus">+ протоколы-методички по каждой процедуре и отработка на 3 моделях</p>
+    <div class="mods" id="modules">
+      <details class="mod reveal" open>
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 01</span>
+          <span class="mod__title">Психология</span>
+          <span class="mod__c">5 уроков</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Настрой, цели и отношения с деньгами</p>
+            <ul class="mod__g">
+              <li>как пройти курс эффективно</li>
+              <li>знакомство, цели</li>
+              <li>баланс жизни: работа с мыслями, техники</li>
+              <li>деньги в нашей жизни, важные правила</li>
+              <li>ваш первый шаг к идеальной коже</li>
+            </ul>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, кто уже бросал обучение на середине</li>
+              <li>тем, кто не верит, что у них получится</li>
+              <li>тем, кому неловко брать деньги за работу</li>
+            </ul>
+          </aside>
         </div>
       </details>
 
-      <details class="acc__item">
-        <summary><span class="acc__n">06</span><span class="acc__t">Сервис от А до Я</span><span class="acc__c">3 урока</span></summary>
-        <ol class="acc__body">
-          <li>Клиентоориентированность. Действия при подписке. Как не спугнуть</li>
-          <li>Сервис в переписке и в салоне. На что обращают внимание клиенты</li>
-          <li>Выбор основного продукта. Стабильные деньги с курса и продажи</li>
-        </ol>
+      <details class="mod reveal">
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 02</span>
+          <span class="mod__title">Кабинет косметолога</span>
+          <span class="mod__c">4 урока</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Как собрать рабочее место, которое проходит проверку</p>
+            <ul class="mod__g">
+              <li>что должно быть в кабинете косметолога</li>
+              <li>одноразовое / многоразовое</li>
+              <li>дезинфекция, стерилизация и обработка инструментов по СанПиН</li>
+              <li>главные атрибуты косметолога на работе</li>
+            </ul>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, кто собирает кабинет с нуля</li>
+              <li>тем, кто не знает, что закупать в первую очередь</li>
+              <li>тем, кто боится проверок и штрафов</li>
+            </ul>
+          </aside>
+        </div>
       </details>
 
-      <details class="acc__item">
-        <summary><span class="acc__n">07</span><span class="acc__t">Маркетинг для косметолога</span><span class="acc__c">3 урока</span></summary>
-        <ol class="acc__body">
-          <li>Как вести соцсети. Личный бренд, визуал, оформление страницы</li>
-          <li>Упаковка продуктов. Как составить прайс</li>
-          <li>Экспертность косметолога. В чём она</li>
-        </ol>
+      <details class="mod reveal">
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 03</span>
+          <span class="mod__title">Анатомия — основа всего</span>
+          <span class="mod__c">4 урока</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Кожа, диагностика и первая консультация</p>
+            <ul class="mod__g">
+              <li>теоретический фундамент, изучаем кожу</li>
+              <li>кожа, в которой мы живём: строение, типы и особенности</li>
+              <li>навык успешной консультации: диагностика онлайн и офлайн</li>
+              <li>карта клиента</li>
+            </ul>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, кто хочет понимать, а не заучивать</li>
+              <li>тем, кто теряется на консультации</li>
+              <li>тем, кто хочет назначать процедуры осознанно</li>
+            </ul>
+          </aside>
+        </div>
+      </details>
+
+      <details class="mod reveal">
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 04</span>
+          <span class="mod__title">Что в твоей банке?</span>
+          <span class="mod__c">3 урока</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Составы, активы и подбор домашнего ухода</p>
+            <ul class="mod__g">
+              <li>составы косметических средств, активы, полный разбор ухода</li>
+              <li>базовый и интенсивный домашний уход, подбор средств для клиента</li>
+              <li>SPF-защита</li>
+            </ul>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, кто путается в составах и активах</li>
+              <li>тем, кто хочет продавать уход без впаривания</li>
+              <li>тем, кому важен результат у клиента дома</li>
+            </ul>
+          </aside>
+        </div>
+      </details>
+
+      <details class="mod mod--hl reveal">
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 05</span>
+          <span class="mod__title">Весь спектр процедур от А до Я</span>
+          <span class="mod__c">9 тем + практика</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Все процедуры курса — с протоколами и отработкой руками</p>
+            <ul class="mod__g">
+              <li>все виды чисток лица</li>
+              <li>пилинги по типу и состоянию кожи: поверхностные, срединные, всесезонные</li>
+              <li>аппаратная фракционная мезотерапия</li>
+              <li>мезороллер / микроигольчатая терапия</li>
+              <li>скульптурный и расслабляющий массажи</li>
+            </ul>
+            <ul class="mod__g">
+              <li>газожидкостный пилинг кожи головы</li>
+              <li>аппаратные процедуры: Dermadrop TDA, Heleo4</li>
+              <li>карбокситерапия CO₂</li>
+              <li>криотерапия / холодный азот</li>
+            </ul>
+            <p class="mod__plus">+ протоколы-методички по каждой процедуре и отработка на 3 моделях</p>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, кто хочет широкий прайс сразу после курса</li>
+              <li>тем, кто боится взять инструмент в руки</li>
+              <li>тем, у кого знания собраны из обрывков</li>
+            </ul>
+          </aside>
+        </div>
+      </details>
+
+      <details class="mod reveal">
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 06</span>
+          <span class="mod__title">Сервис от А до Я</span>
+          <span class="mod__c">3 урока</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Как сделать так, чтобы клиент возвращался</p>
+            <ul class="mod__g">
+              <li>клиентоориентированность, действия при подписке, как не спугнуть</li>
+              <li>сервис в переписке и в салоне, на что обращают внимание клиенты</li>
+              <li>выбор основного продукта, стабильные деньги с курса и продажи</li>
+            </ul>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, у кого клиенты приходят один раз</li>
+              <li>тем, кто стесняется писать первым</li>
+              <li>тем, кто хочет заполненную запись, а не разовые визиты</li>
+            </ul>
+          </aside>
+        </div>
+      </details>
+
+      <details class="mod reveal">
+        <summary class="mod__head">
+          <span class="mod__badge">Модуль 07</span>
+          <span class="mod__title">Маркетинг для косметолога</span>
+          <span class="mod__c">3 урока</span>
+        </summary>
+        <div class="mod__in">
+          <div class="mod__main">
+            <p class="mod__sub">Как находить клиентов и выстраивать поток</p>
+            <ul class="mod__g">
+              <li>как вести соцсети: личный бренд, визуал, оформление страницы</li>
+              <li>упаковка продуктов, как составить прайс</li>
+              <li>экспертность косметолога — в чём она</li>
+            </ul>
+          </div>
+          <aside class="mod__side">
+            <p class="mod__cap">Подходит:</p>
+            <ul>
+              <li>тем, у кого нет стабильного потока</li>
+              <li>тем, кто хочет начать зарабатывать быстрее</li>
+              <li>тем, кто не понимает, как привлекать клиентов</li>
+            </ul>
+          </aside>
+        </div>
       </details>
     </div>
 
@@ -330,65 +425,11 @@
   </div>
 </section>
 
-<!-- ══ 07. ПРАКТИКА ══ -->
-<section class="sec sec--dark" id="practice">
-  <div class="wrap">
-    <p class="eyebrow eyebrow--light reveal" data-n="07">Офлайн-часть</p>
-    <h2 class="h2 reveal">Руки ставятся руками.<br>Не видео</h2>
-    <p class="lead reveal">Можно посмотреть сто уроков и всё равно замереть над первым клиентом.
-      Поэтому курс заканчивается днём в кабинете — с моделями, инструментом и мной рядом.</p>
 
-    <div class="tiles">
-      <div class="tile reveal"><b>3 модели</b><span>Не одна «показательная», а три разных типа кожи</span></div>
-      <div class="tile reveal" style="--d:.08s"><b>Всё наше</b><span>Косметика, расходники и модели от школы. Приезжаете с собой</span></div>
-      <div class="tile reveal" style="--d:.16s"><b>Центр Москвы</b><span>Оборудованный кабинет с аппаратами из программы</span></div>
-      <div class="tile reveal" style="--d:.24s"><b>Постановка руки</b><span>Я стою рядом и поправляю движение, пока оно не станет вашим</span></div>
-    </div>
-
-    <div class="practice__row">
-      <figure class="ph ph--dark ph--wide reveal"><span class="ph__label">assets/training-hands-on.jpg</span></figure>
-      <div class="practice__txt reveal">
-        <h3>Как проходит день</h3>
-        <p>Утром разбираем протоколы и повторяем показания. Дальше — работа: диагностика,
-          чистка, пилинг, аппаратная процедура, массаж. Вы ведёте клиента полностью, от консультации
-          до рекомендаций по домашнему уходу. Я не забираю инструмент из рук — я подсказываю.</p>
-        <p>К концу дня у вас три проведённые процедуры и понимание, что вы это можете.</p>
-        <p class="practice__note">Практика входит в оба тарифа. Дата подбирается под ваш график.</p>
-        <a href="#" class="btn btn--light js-tg">Задать вопрос о практике</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 08. ДОКУМЕНТ ══ -->
-<section class="sec" id="document">
-  <div class="wrap">
-    <div class="doc">
-      <figure class="ph ph--doc reveal"><span class="ph__label">assets/document.jpg</span></figure>
-      <div class="doc__body">
-        <p class="eyebrow reveal" data-n="08">Документ</p>
-        <h2 class="h2 reveal">Документ, который можно проверить<br>в государственном реестре</h2>
-        <ol class="doc__list">
-          <li class="reveal"><b>Что вы получаете</b>
-            Документ установленного образца об обучении по программе косметологии.</li>
-          <li class="reveal" style="--d:.08s"><b>Куда он вносится</b>
-            В ФРДО — Федеральный реестр сведений о документах об образовании. Это государственная база:
-            работодатель или клиент может проверить вашу квалификацию по номеру.</li>
-          <li class="reveal" style="--d:.16s"><b>Что это даёт</b>
-            Право работать легально, устраиваться в клинику и салон, открывать свой кабинет
-            и не объясняться за «сертификат из интернета».</li>
-        </ol>
-        <p class="honest reveal">Документ выдаётся при наличии медицинского образования — среднего или
-          высшего, включая незаконченное. Это требование к профессии, а не наше условие.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 09. КАК ПРОХОДИТ ══ -->
+<!-- ══ 06. КАК ПРОХОДИТ ══ -->
 <section class="sec sec--tint" id="how">
   <div class="wrap">
-    <p class="eyebrow reveal" data-n="09">Как всё устроено</p>
+    <p class="eyebrow reveal" data-n="06">Как всё устроено</p>
     <h2 class="h2 reveal">Пять шагов от решения<br>до первых клиентов</h2>
 
     <ol class="steps">
@@ -420,27 +461,39 @@
   </div>
 </section>
 
-<!-- ══ 10. ТАРИФЫ ══ -->
+<!-- ══ 07. ТАРИФЫ ══ -->
 <section class="sec" id="price">
   <div class="wrap">
-    <p class="eyebrow reveal" data-n="10">Стоимость</p>
-    <h2 class="h2 reveal">Два формата обучения</h2>
-    <p class="lead reveal">Программа в обоих одинаковая — разница в том,
-      сколько моего внимания достаётся вам лично.</p>
+    <p class="eyebrow reveal" data-n="07">Стоимость</p>
+    <h2 class="h2 reveal">Три формата обучения</h2>
 
     <div class="plans">
       <article class="plan reveal">
-        <h3 class="plan__name">Групповой</h3>
-        <p class="plan__meta">Группа 3–5 человек</p>
-        <p class="plan__price"><s>100 000 ₽</s><b>49 900 ₽</b></p>
+        <h3 class="plan__name">Онлайн</h3>
+        <p class="plan__meta">Учитесь в своём темпе</p>
+        <p class="plan__price"><b>33 000 ₽</b></p>
         <ul class="plan__list">
           <li>Все 7 модулей, 31 урок</li>
           <li>Протоколы-методички по всем процедурам</li>
+          <li>Доступ к урокам без ограничения по времени</li>
+          <li>Обратная связь в чате потока</li>
+          <li>Документ с внесением в ФРДО</li>
+          <li class="is-no">Без дня практики в Москве — только видеоуроки</li>
+          <li class="is-no">Без расходников, косметики и моделей</li>
+          <!-- Лиана: сюда можно добавить ещё пункты отличий онлайн vs групповой -->
+        </ul>
+        <a href="#" class="btn btn--ghost js-tg">Забронировать место</a>
+      </article>
+
+      <article class="plan reveal" style="--d:.05s">
+        <h3 class="plan__name">Групповой</h3>
+        <p class="plan__meta">Группа 5 человек</p>
+        <p class="plan__price"><s>100 000 ₽</s><b>49 900 ₽</b></p>
+        <ul class="plan__list">
+          <li>Всё из онлайна</li>
           <li>День практики в Москве на 3 моделях</li>
           <li>Все расходники, косметика и модели — от нас</li>
           <li>Блок «Маркетинг для косметолога»: прайс, соцсети, первые клиенты</li>
-          <li>Обратная связь в чате потока</li>
-          <li>Документ с внесением в ФРДО</li>
         </ul>
         <a href="#" class="btn btn--ghost js-tg">Забронировать место</a>
       </article>
@@ -466,18 +519,17 @@
     <div class="pay reveal">
       <div><b>Бронь от 5 900 ₽</b><span>Фиксирует место в ближайшем потоке</span></div>
       <div><b>Оплата частями</b><span>50% в начале обучения, 50% в конце</span></div>
-      <div><b>Через Т-Банк</b><span>Если удобнее оформить банковским продуктом — поможем</span></div>
       <div><b>3–5 мест</b><span>Больше в поток я не беру, чтобы вести каждую лично</span></div>
     </div>
   </div>
 </section>
 
-<!-- ══ 11. ОТЗЫВЫ ══ -->
+<!-- ══ 08. ОТЗЫВЫ ══ -->
 <section class="sec sec--tint" id="reviews">
   <div class="wrap">
-    <p class="eyebrow reveal" data-n="11">Отзывы</p>
+    <p class="eyebrow reveal" data-n="08">Отзывы</p>
     <h2 class="h2 reveal">Те, кто уже прошёл этот путь</h2>
-    <p class="lead reveal">Скриншоты как есть, без правок. Полная версия — в закреплённых сторис.</p>
+    <p class="lead reveal">Полная версия — в закреплённых сторис.</p>
 
     <div class="revs">
       <figure class="ph ph--rev reveal"><span class="ph__label">assets/review-1.jpg</span></figure>
@@ -514,42 +566,11 @@
   </div>
 </section>
 
-<!-- ══ 12. КОМУ ПОДОЙДЁТ ══ -->
-<section class="sec" id="fit">
-  <div class="wrap">
-    <p class="eyebrow reveal" data-n="12">Честно</p>
-    <h2 class="h2 reveal">Кому этот курс подходит,<br>а кому нет</h2>
 
-    <div class="fit">
-      <div class="fit__col fit__col--yes reveal">
-        <h3>Подойдёт</h3>
-        <ul>
-          <li><b>Медсёстрам</b> — среднее медицинское образование, есть база и руки</li>
-          <li><b>Студенткам меда 1–6 курса</b> — можно учиться параллельно с вузом</li>
-          <li><b>Врачам любых специальностей</b> — как вторая профессия с гибким графиком</li>
-          <li><b>Действующим косметологам</b> — если знания собраны из обрывков и нет системы</li>
-          <li>Тем, кто готов выделить месяц и один день на офлайн-практику</li>
-        </ul>
-      </div>
-      <div class="fit__col fit__col--no reveal" style="--d:.1s">
-        <h3>Не подойдёт</h3>
-        <ul>
-          <li><b>Тем, у кого нет медицинского образования.</b> Даже незаконченного. Без него нельзя
-            ни выдать документ, ни легально работать — и я не буду это обходить</li>
-          <li>Тем, кто ищет способ заработать, ничего не делая руками</li>
-          <li>Тем, кто не готов приехать на практику: без постановки руки курс теряет половину смысла</li>
-          <li>Тем, кому нужны гарантии дохода. Я даю профессию и инструменты.
-            Сколько вы заработаете — зависит от того, как вы будете работать</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 13. FAQ ══ -->
+<!-- ══ 09. FAQ ══ -->
 <section class="sec sec--tint" id="faq">
   <div class="wrap wrap--narrow">
-    <p class="eyebrow reveal" data-n="13">Вопросы</p>
+    <p class="eyebrow reveal" data-n="09">Вопросы</p>
     <h2 class="h2 reveal">Что спрашивают чаще всего</h2>
 
     <div class="acc acc--faq">
@@ -617,10 +638,10 @@
   </div>
 </section>
 
-<!-- ══ 14. ФИНАЛ ══ -->
+<!-- ══ 10. ФИНАЛ ══ -->
 <section class="final" id="cta">
   <div class="wrap wrap--narrow">
-    <p class="eyebrow eyebrow--light reveal" data-n="14">Ближайший поток</p>
+    <p class="eyebrow eyebrow--light reveal" data-n="10">Ближайший поток</p>
     <h2 class="final__h reveal">Поток стартует<br><em class="js-stream">7 числа</em></h2>
     <p class="final__p reveal">В группе 3–5 человек: столько, сколько я могу вести лично.
       Когда места заканчиваются — следующий старт через месяц.</p>
