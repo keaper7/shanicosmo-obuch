@@ -133,6 +133,79 @@ document.querySelectorAll('.js-tg').forEach(el => {
   });
 })();
 
+/* ── Лайтбокс отзывов: открыть, листать стрелками/свайпом/клавиатурой ── */
+(() => {
+  const lb = document.getElementById('lightbox');
+  const revs = document.getElementById('revs');
+  if (!lb || !revs) return;
+
+  const items = [...revs.querySelectorAll('.ph__zoom img')];
+  if (!items.length) return;
+
+  const img = lb.querySelector('.lb__img');
+  const count = lb.querySelector('.lb__count');
+  const btnClose = lb.querySelector('.lb__x');
+  const btnPrev = lb.querySelector('.lb__prev');
+  const btnNext = lb.querySelector('.lb__next');
+
+  let index = 0;
+  let trigger = null;
+
+  const show = i => {
+    index = (i + items.length) % items.length;
+    const src = items[index];
+    img.src = src.currentSrc || src.src;
+    img.alt = src.alt;
+    count.textContent = `${index + 1} / ${items.length}`;
+  };
+
+  const open = i => {
+    trigger = document.activeElement;
+    show(i);
+    lb.classList.add('is-open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    btnClose.focus();
+  };
+
+  const close = () => {
+    lb.classList.remove('is-open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    trigger?.focus();
+  };
+
+  items.forEach((image, i) => {
+    image.closest('.ph__zoom').addEventListener('click', () => open(i));
+  });
+
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', () => show(index - 1));
+  btnNext.addEventListener('click', () => show(index + 1));
+
+  lb.addEventListener('click', e => {
+    if (e.target === lb) close();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(index - 1);
+    if (e.key === 'ArrowRight') show(index + 1);
+  });
+
+  // свайп по фото
+  let touchX = null;
+  const frame = lb.querySelector('.lb__frame');
+  frame.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  frame.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) show(index + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
+})();
+
 /* ── Плавный скролл с учётом высоты шапки ── */
 (() => {
   const header = document.querySelector('.hdr');

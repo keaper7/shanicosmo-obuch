@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Косметология с 0 — обучение для медсестёр и студентов-медиков | Лиана Шанибова</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" content="Курс «Косметология с 0» для медсестёр, студентов-медиков и врачей. 1 месяц, 7 модулей, практика в Москве на 3 моделях, документ с внесением в ФРДО. Ближайший поток — 7 числа.">
 <meta property="og:title" content="Косметология с 0 — обучение для медиков">
 <meta property="og:description" content="За месяц — профессия косметолога-эстетиста. 7 модулей, практика на живых моделях, документ в ФРДО.">
@@ -74,10 +76,14 @@
       </p>
     </div>
 
-    <figure class="hero__photo reveal" style="--d:.2s">
-      <img src="assets/hero-portrait.jpg" alt="Лиана Шанибова, косметолог-эстетист" loading="eager">
-      <span class="hero__tag">6+ лет в косметологии</span>
-    </figure>
+    <div class="hero__photo-frame">
+      <span class="hero__photo-back" aria-hidden="true"></span>
+      <span class="hero__photo-label" aria-hidden="true"><i></i>Действующая практика</span>
+      <figure class="hero__photo">
+        <img src="assets/hero-portrait.jpg" alt="Лиана Шанибова, косметолог-эстетист" loading="eager">
+        <span class="hero__tag">6+ лет в косметологии</span>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -171,9 +177,6 @@
       <div class="expert__media reveal">
         <figure class="ph ph--tall">
           <img src="assets/about-portrait.jpg" alt="Лиана Шанибова" loading="lazy">
-        </figure>
-        <figure class="ph ph--tall expert__cab">
-          <img src="assets/about-cabinet.jpg" alt="Лиана Шанибова за рабочим столом, на стене — сертификаты" loading="lazy">
         </figure>
       </div>
 
@@ -531,13 +534,37 @@
     <h2 class="h2 reveal">Те, кто уже прошёл этот путь</h2>
     <p class="lead reveal">Полная версия — в закреплённых сторис.</p>
 
-    <div class="revs">
-      <figure class="ph ph--rev reveal"><span class="ph__label">assets/review-1.jpg</span></figure>
-      <figure class="ph ph--rev reveal" style="--d:.06s"><span class="ph__label">assets/review-2.jpg</span></figure>
-      <figure class="ph ph--rev reveal" style="--d:.12s"><span class="ph__label">assets/review-3.jpg</span></figure>
-      <figure class="ph ph--rev reveal" style="--d:.18s"><span class="ph__label">assets/review-4.jpg</span></figure>
-      <figure class="ph ph--rev reveal" style="--d:.24s"><span class="ph__label">assets/review-5.jpg</span></figure>
-      <figure class="ph ph--rev reveal" style="--d:.3s"><span class="ph__label">assets/review-6.jpg</span></figure>
+    <div class="revs" id="revs">
+      <figure class="ph ph--rev reveal">
+        <button class="ph__zoom" type="button" aria-label="Открыть отзыв полностью">
+          <img src="assets/review-1.jpg" alt="Отзыв ученицы курса «Косметология с 0»" loading="lazy">
+        </button>
+      </figure>
+      <figure class="ph ph--rev reveal" style="--d:.06s">
+        <button class="ph__zoom" type="button" aria-label="Открыть отзыв полностью">
+          <img src="assets/review-2.jpg" alt="Отзыв ученицы курса «Косметология с 0»" loading="lazy">
+        </button>
+      </figure>
+      <figure class="ph ph--rev reveal" style="--d:.12s">
+        <button class="ph__zoom" type="button" aria-label="Открыть отзыв полностью">
+          <img src="assets/review-3.jpg" alt="Отзыв ученицы курса «Косметология с 0»" loading="lazy">
+        </button>
+      </figure>
+      <figure class="ph ph--rev reveal" style="--d:.18s">
+        <button class="ph__zoom" type="button" aria-label="Открыть отзыв полностью">
+          <img src="assets/review-4.jpg" alt="Отзыв клиентки о процедуре" loading="lazy">
+        </button>
+      </figure>
+      <figure class="ph ph--rev reveal" style="--d:.24s">
+        <button class="ph__zoom" type="button" aria-label="Открыть отзыв полностью">
+          <img src="assets/review-5.jpg" alt="Отзыв ученицы курса «Косметология с 0»" loading="lazy">
+        </button>
+      </figure>
+      <figure class="ph ph--rev reveal" style="--d:.3s">
+        <button class="ph__zoom" type="button" aria-label="Открыть отзыв полностью">
+          <img src="assets/review-6.jpg" alt="Отзыв ученицы курса «Косметология с 0»" loading="lazy">
+        </button>
+      </figure>
     </div>
 
     <!-- Развёрнутые кейсы: заполнить реальными данными выпускниц -->
@@ -679,6 +706,17 @@
 </footer>
 
 <a href="#" class="sticky js-tg" id="sticky">Забронировать · от 5 900 ₽</a>
+
+<!-- ══ ЛАЙТБОКС ОТЗЫВОВ ══ -->
+<div class="lb" id="lightbox" aria-hidden="true">
+  <button class="lb__x" type="button" aria-label="Закрыть">✕</button>
+  <button class="lb__nav lb__prev" type="button" aria-label="Предыдущий отзыв">‹</button>
+  <button class="lb__nav lb__next" type="button" aria-label="Следующий отзыв">›</button>
+  <figure class="lb__frame">
+    <img class="lb__img" src="" alt="">
+  </figure>
+  <p class="lb__count"></p>
+</div>
 
 <script src="script.js"></script>
 </body>
