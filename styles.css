@@ -452,11 +452,14 @@ a{ color:inherit; }
   .hero__photo-frame{
     order:-1; aspect-ratio:4/5; min-height:0;
     width:min(100% - var(--pad) * 2, 440px);
+    margin:clamp(54px,11vw,100px) auto 10px;
     /* Смещённая тёмная подложка (см. .hero__photo-back) физически не
        входит в ширину рамки и «съедает» часть правого отступа — без
-       поправки фото визуально прижато вправо. Левое поле чуть уже
-       правого на ту же величину, чтобы сама карточка читалась по центру. */
-    margin:clamp(54px,11vw,100px) calc(var(--pad) + 7px) 10px calc(var(--pad) - 7px);
+       поправки фото визуально прижато вправо. translateX не завязан на
+       --pad, поэтому работает и когда ширина упирается в потолок 440px
+       (на планшетных экранах margin:auto тогда даёт огромный правый
+       отступ — фикс через margin считал бы неверно именно в этом случае). */
+    transform:translateX(-7px);
   }
   .hero__photo-back{ transform:translate(14px,14px); }
   .hero__text{ padding-top:clamp(28px,6vw,44px); }
@@ -469,10 +472,7 @@ a{ color:inherit; }
 }
 @media (max-width:640px){
   /* квадрат вместо 4:5 — так на телефоне заголовок попадает на первый экран */
-  .hero__photo-frame{
-    aspect-ratio:1/1;
-    margin-left:calc(var(--pad) - 5px); margin-right:calc(var(--pad) + 5px);
-  }
+  .hero__photo-frame{ aspect-ratio:1/1; transform:translateX(-5px); }
   .hero__photo-back{ transform:translate(10px,10px); }
   .hero__tag{ left:16px; bottom:16px; padding:9px 15px; font-size:12px; }
 }
