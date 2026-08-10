@@ -114,7 +114,7 @@ a{ color:inherit; }
 .h2, .hero__h1, .hero__marks b, .final__h, .hdr__name, .ftr__name,
 .stats dt, .plan__name, .plan__price, .plan__price s, .plan__badge,
 .acc__n, .acc__t, .card__num, .card h3, .skills b, .steps b, .tile b,
-.doc__list b, .pay b, .fit__col h3, .case h3, .case__q, .practice__txt h3,
+.doc__list b, .pay b, .fit__col h3, .practice__txt h3,
 .quote, .shift__sign, .steps li::before, .doc__list li::before,
 .skills li::before, .acc__body li::before, .eyebrow[data-n]::before{
   font-variant-numeric:lining-nums proportional-nums;
@@ -177,6 +177,12 @@ a{ color:inherit; }
   content:''; position:absolute; left:0; right:0; height:1px; background:var(--hair);
 }
 .sec--tint::before{ top:0; } .sec--tint::after{ bottom:0; }
+
+/* два тонированных блока подряд — им не нужен полный отступ друг от друга,
+   фон и так общий, разделяет только тонкая линия */
+.sec--tint:has(+ .sec--tint){ padding-bottom:clamp(40px,5vw,64px); }
+.sec--tint + .sec--tint{ padding-top:clamp(40px,5vw,64px); }
+.sec--tint + .sec--tint::before{ display:none; }
 
 .sec--dark{
   background:var(--night);
@@ -318,10 +324,10 @@ a{ color:inherit; }
   position:absolute; left:0; right:0; z-index:0;
   margin:0; text-align:center; white-space:nowrap;
   font-family:var(--serif); font-weight:500; text-transform:uppercase;
-  font-size:clamp(56px,9vw,148px); line-height:1; letter-spacing:.01em;
+  font-size:clamp(48px,7vw,118px); line-height:1; letter-spacing:.01em;
   color:var(--paper-2); pointer-events:none; user-select:none;
 }
-.hero__ghost--top{ top:clamp(-46px,-4.5vw,-18px); }
+.hero__ghost--top{ top:clamp(-14px,-1vw,10px); }
 .hero__ghost--bottom{ bottom:clamp(-32px,-3.4vw,-10px); }
 
 .hero__grid{
@@ -533,7 +539,7 @@ a{ color:inherit; }
 }
 
 .shift__sign{
-  margin:clamp(34px,4.4vw,54px) auto 0; max-width:40ch; text-align:center;
+  margin:clamp(34px,4.4vw,54px) auto 0; max-width:66ch; text-align:center;
   font-family:var(--serif); font-weight:300; font-style:italic;
   font-size:clamp(21px,2.5vw,32px); line-height:1.28; color:var(--cocoa);
 }
@@ -550,6 +556,11 @@ a{ color:inherit; }
   margin:0 0 30px; font-size:13px; color:var(--ink-52); letter-spacing:.015em;
   max-width:60ch;
 }
+.expert__role a{
+  color:var(--cocoa); text-decoration:underline; text-underline-offset:2px;
+  text-decoration-color:var(--hair-2); transition:text-decoration-color .3s var(--ease);
+}
+.expert__role a:hover{ text-decoration-color:var(--cocoa); }
 .stats{
   display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
   gap:clamp(16px,2.4vw,36px); align-items:start;
@@ -754,10 +765,25 @@ a{ color:inherit; }
 .acc--faq .acc__item summary{ padding:21px 46px 21px 0; }
 .acc--faq .acc__body{ padding-left:0; padding-right:58px; padding-bottom:24px; max-width:70ch; }
 
-.totals{
-  margin:30px 0 0; padding:20px 24px; text-align:center;
-  background:var(--card); border:1px solid var(--hair-2); border-radius:var(--r-l);
-  font-size:13.5px; line-height:1.62; color:var(--cocoa); letter-spacing:.01em;
+.mods__cta{ margin-top:clamp(40px,5vw,64px); text-align:center; }
+
+/* кнопка-магнит: не сливается со страницей, притягивает взгляд без кричащих цветов.
+   Цвет свечения берётся из --bronze — в тёмных секциях-скобках эта переменная
+   уже переопределена на светлую, поэтому эффект остаётся заметным на любом фоне. */
+.btn--glow{
+  padding:clamp(17px,2vw,21px) clamp(36px,4.6vw,52px);
+  font-size:clamp(15px,1.4vw,16.5px); font-weight:600; letter-spacing:.04em;
+  border-radius:12px;
+  box-shadow:0 0 0 0 color-mix(in srgb, var(--bronze) 24%, transparent), var(--shadow-s);
+  animation:btnGlow 2.6s ease-in-out infinite;
+}
+.btn--glow:hover{ animation-play-state:paused; }
+@keyframes btnGlow{
+  0%, 100%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--bronze) 22%, transparent), var(--shadow-s); }
+  50%{ box-shadow:0 0 0 11px color-mix(in srgb, var(--bronze) 0%, transparent), var(--shadow-m); }
+}
+@media (prefers-reduced-motion: reduce){
+  .btn--glow{ animation:none; }
 }
 
 /* ─────────── 07. ПРАКТИКА ─────────── */
@@ -873,9 +899,9 @@ a{ color:inherit; }
 .plan__meta{ margin:0 0 24px; font-size:12.5px; color:var(--ink-34); letter-spacing:.02em; }
 .plan__price{
   margin:0 0 26px; padding-bottom:24px; border-bottom:1px solid var(--hair);
-  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px;
 }
-.plan__price s{ font-family:var(--serif); font-size:22px; color:var(--ink-34); text-decoration-thickness:1px; }
+.plan__price s{ font-family:var(--serif); font-size:25px; color:var(--ink-34); text-decoration-thickness:1px; }
 .plan__price b{
   font-family:var(--serif); font-weight:400;
   font-size:clamp(36px,4vw,54px); line-height:.94;
@@ -944,23 +970,6 @@ a{ color:inherit; }
 }
 .ph__zoom:hover::after, .ph__zoom:focus-visible::after{ opacity:1; }
 .ph__zoom:hover::before, .ph__zoom:focus-visible::before{ opacity:1; transform:scale(1); }
-
-.cases{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(18px,2.2vw,32px); }
-.case{
-  display:grid; grid-template-columns:132px 1fr; gap:24px;
-  background:var(--card); border:1px solid var(--hair);
-  border-radius:var(--r-l); padding:26px;
-}
-.ph--case{ aspect-ratio:4/5; min-height:0; }
-.case h3{ font-family:var(--serif); font-weight:500; font-size:23px; margin:0 0 14px; line-height:1.1; }
-.case p{ margin:0 0 10px; font-size:15px; line-height:1.58; color:var(--ink-70); }
-.case b{ color:var(--ink); }
-.case__q{
-  padding-left:15px; border-left:1px solid var(--rose);
-  font-family:var(--serif); font-style:italic; font-size:17px !important;
-  color:var(--cocoa) !important;
-}
-.case__t{ font-size:11.5px !important; color:var(--ink-34) !important; margin:0 !important; letter-spacing:.04em; }
 
 /* ─────────── ЛАЙТБОКС ОТЗЫВОВ ─────────── */
 
@@ -1044,7 +1053,7 @@ a{ color:inherit; }
   content:''; position:absolute; inset:0;
   background:
     radial-gradient(52% 58% at 50% -6%, rgba(78,0,0,.28), transparent 66%),
-    radial-gradient(42% 46% at 12% 106%, rgba(233,212,195,.14), transparent 70%);
+    radial-gradient(42% 46% at 50% 106%, rgba(233,212,195,.14), transparent 70%);
 }
 .final > .wrap{ position:relative; z-index:1; }
 .final .eyebrow{ justify-content:center; }
@@ -1133,7 +1142,6 @@ a{ color:inherit; }
   .doc{ grid-template-columns:1fr; }
   .ph--doc{ aspect-ratio:16/10; max-width:440px; }
   .fit{ grid-template-columns:1fr; }
-  .cases{ grid-template-columns:1fr; }
   .ftr__grid{ flex-direction:column; }
   .ftr__legal{ text-align:left; }
 
@@ -1171,8 +1179,6 @@ a{ color:inherit; }
   }
   .revs::-webkit-scrollbar{ display:none; }
   .ph--rev{ flex:0 0 60%; scroll-snap-align:start; }
-  .case{ grid-template-columns:1fr; }
-  .ph--case{ aspect-ratio:16/10; }
   .prose p:first-child::first-letter{ font-size:2.9em; }
   .eyebrow{ gap:11px; }
   .eyebrow::after{ display:none; }

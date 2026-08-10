@@ -5,8 +5,8 @@
 /* ──────────────────────────────────────────────
    НАСТРОЙКА: замените на реальный ник Telegram
    ────────────────────────────────────────────── */
-const TG_USERNAME = 'dr_shanicosmo';
-const TG_TEXT = 'Здравствуйте! Пишу с сайта — хочу забронировать место на курс «Косметология с 0».';
+const TG_USERNAME = 'dr_shanicosm';
+const TG_TEXT = 'Добрый день! Хочу записаться на обучение';
 
 const TG_LINK = `https://t.me/${TG_USERNAME}?text=${encodeURIComponent(TG_TEXT)}`;
 
@@ -122,13 +122,59 @@ document.querySelectorAll('.js-tg').forEach(el => {
   map.forEach((_, section) => io.observe(section));
 })();
 
-/* ── Аккордеон модулей: открыт только один пункт ── */
+/* ── Аккордеон модулей: плавное раскрытие, открыт только один пункт ──
+   <details> по умолчанию переключается мгновенно — высоту анимируем
+   вручную (Web Animations API), сам браузер отвечает только за то,
+   что доступ к контенту закрытого модуля скрыт от скринридеров/поиска. */
 (() => {
-  const modules = document.querySelectorAll('#modules .mod');
+  const modules = [...document.querySelectorAll('#modules .mod')];
+  if (!modules.length) return;
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DURATION = 380;
+  const EASE = 'cubic-bezier(.22,.68,.24,1)';
+  const running = new WeakMap();
+
+  const animateHeight = (el, from, to, onDone) => {
+    running.get(el)?.cancel();
+    if (reduced) { onDone(); return; }
+    el.style.overflow = 'hidden';
+    const anim = el.animate(
+      [{ height: `${from}px` }, { height: `${to}px` }],
+      { duration: DURATION, easing: EASE, fill: 'both' }
+    );
+    running.set(el, anim);
+    anim.onfinish = () => {
+      running.delete(el);
+      onDone();
+      anim.cancel();
+      el.style.overflow = '';
+    };
+    anim.oncancel = () => running.delete(el);
+  };
+
+  const collapse = item => {
+    const inner = item.querySelector('.mod__in');
+    if (!inner || !item.open) return;
+    const from = inner.offsetHeight;
+    animateHeight(inner, from, 0, () => { item.open = false; });
+  };
+
+  const expand = item => {
+    item.open = true;
+    const inner = item.querySelector('.mod__in');
+    if (!inner) return;
+    const to = inner.scrollHeight;
+    animateHeight(inner, 0, to, () => {});
+  };
+
   modules.forEach(item => {
-    item.addEventListener('toggle', () => {
-      if (!item.open) return;
-      modules.forEach(other => { if (other !== item) other.open = false; });
+    const head = item.querySelector('.mod__head');
+    head.addEventListener('click', e => {
+      e.preventDefault();
+      if (item.open) { collapse(item); return; }
+      modules.forEach(other => { if (other !== item && other.open) collapse(other); });
+      expand(item);
     });
   });
 })();
