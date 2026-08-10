@@ -445,16 +445,38 @@ a{ color:inherit; }
 @media (max-width:900px){
   .hero__grid{ grid-template-columns:1fr; min-height:0; }
   .hero__photo-label{ display:none; }
+  /* В одну колонку арка встаёт по центру: во всю ширину она вырастает
+     на весь экран и уводит заголовок с оффером под сгиб — поэтому ширину
+     ограничиваем. Верхний отступ освобождает полосу под фоновую надпись,
+     иначе фото закрыло бы её середину и от слова остались бы обрубки. */
   .hero__photo-frame{
     order:-1; aspect-ratio:4/5; min-height:0;
-    margin:26px var(--pad) 10px;
+    width:min(100% - var(--pad) * 2, 440px);
+    /* Смещённая тёмная подложка (см. .hero__photo-back) физически не
+       входит в ширину рамки и «съедает» часть правого отступа — без
+       поправки фото визуально прижато вправо. Левое поле чуть уже
+       правого на ту же величину, чтобы сама карточка читалась по центру. */
+    margin:clamp(54px,11vw,100px) calc(var(--pad) + 7px) 10px calc(var(--pad) - 7px);
   }
   .hero__photo-back{ transform:translate(14px,14px); }
   .hero__text{ padding-top:clamp(28px,6vw,44px); }
-  .hero__ghost{ font-size:clamp(44px,13vw,72px); }
+
+  /* Надпись набрана в одну строку и не переносится, поэтому её размер
+     считаем от ширины вьюпорта. Коэффициенты разные — строки разной
+     длины должны укладываться в экран обе. */
+  .hero__ghost--top{ font-size:8.2vw; top:8px; }
+  .hero__ghost--bottom{ font-size:11.6vw; }
+}
+@media (max-width:640px){
+  /* квадрат вместо 4:5 — так на телефоне заголовок попадает на первый экран */
+  .hero__photo-frame{
+    aspect-ratio:1/1;
+    margin-left:calc(var(--pad) - 5px); margin-right:calc(var(--pad) + 5px);
+  }
+  .hero__photo-back{ transform:translate(10px,10px); }
+  .hero__tag{ left:16px; bottom:16px; padding:9px 15px; font-size:12px; }
 }
 @media (max-width:480px){
-  .hero__ghost--top{ top:56px; }
   .hero__marks{ grid-template-columns:repeat(2,1fr); row-gap:22px; }
 }
 
@@ -1074,7 +1096,7 @@ a{ color:inherit; }
 /* ─────────── ФУТЕР ─────────── */
 
 .ftr{
-  background:var(--night-2); color:rgba(255,255,255,.46); padding:48px 0 38px;
+  background:var(--night-2); color:rgba(255,255,255,.46); padding:48px 0 20px;
   border-top:1px solid rgba(255,255,255,.08); font-size:12.5px;
 }
 .ftr__grid{ display:flex; flex-wrap:wrap; gap:30px; justify-content:space-between; }
@@ -1085,11 +1107,29 @@ a{ color:inherit; }
 .ftr__legal{ text-align:right; }
 .ftr__legal p{ margin:0 0 9px; }
 .ftr__legal a{ color:rgba(255,255,255,.6); }
-.ftr__year{ color:rgba(255,255,255,.28); }
+.ftr__contacts-h{
+  margin:0 0 14px; font-family:var(--serif); font-size:17px; font-weight:500; color:#fff;
+}
+.ftr__socials{ display:flex; justify-content:flex-end; gap:10px; margin-bottom:16px; }
+.ftr__socials a{
+  display:flex; align-items:center; justify-content:center;
+  width:44px; height:44px; border:1px solid rgba(255,255,255,.16); border-radius:10px;
+  color:rgba(255,255,255,.7); transition:border-color .25s var(--ease), color .25s var(--ease);
+}
+.ftr__socials a:hover{ border-color:var(--gold); color:var(--gold); }
+.ftr__socials svg{ width:19px; height:19px; }
 .ftr__meta{
-  margin:34px 0 0; padding-top:20px; border-top:1px solid rgba(255,255,255,.07);
+  margin:18px 0 0; padding-top:16px; border-top:1px solid rgba(255,255,255,.07);
   font-size:10.5px; line-height:1.5; color:rgba(255,255,255,.26);
 }
+.ftr__credit{
+  margin:16px 0 0; font-size:10.5px; color:rgba(255,255,255,.26);
+}
+.ftr__credit a{
+  color:rgba(255,255,255,.78); text-decoration:underline;
+  text-underline-offset:2px; text-decoration-color:rgba(255,255,255,.28);
+}
+.ftr__credit a:hover{ color:var(--gold); text-decoration-color:var(--gold); }
 
 /* ─────────── STICKY CTA ─────────── */
 
@@ -1144,10 +1184,13 @@ a{ color:inherit; }
   .fit{ grid-template-columns:1fr; }
   .ftr__grid{ flex-direction:column; }
   .ftr__legal{ text-align:left; }
+  .ftr__socials{ justify-content:flex-start; }
 
   .shift{ grid-template-columns:1fr; }
   .shift__axis{ height:56px; }
   .shift__axis::before{ top:0; bottom:0; left:50%; }
+  /* колонки встали друг под друга — стрелка должна вести вниз, а не вбок */
+  .shift__key{ transform:rotate(90deg); }
   .shift__col--now{ padding-right:0; }
   .shift__col--next{ padding-inline:20px; }
 }
@@ -1188,4 +1231,6 @@ a{ color:inherit; }
   .acc--faq .acc__body{ padding-right:0; }
   .sticky{ display:block; }
   .final{ padding-bottom:110px; }
+  /* место под sticky-кнопку — иначе она накрывает последнюю строку футера */
+  .ftr{ padding-bottom:96px; }
 }
