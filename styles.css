@@ -1168,7 +1168,10 @@ a{ color:inherit; }
   .steps li::after{ display:none; }
   .revs{ grid-template-columns:repeat(3,1fr); }
   .tiles{ grid-template-columns:repeat(2,1fr); }
+  /* 3 блока в сетке 2 колонки оставляют пустую серую ячейку — растягиваем
+     третий на всю ширину вместо неё */
   .pay{ grid-template-columns:repeat(2,1fr); }
+  .pay > div:last-child{ grid-column:1 / -1; }
   .hdr__nav{ display:none; }
   .plans{ grid-template-columns:1fr; }
   .plan--hl{ margin-top:16px; }
