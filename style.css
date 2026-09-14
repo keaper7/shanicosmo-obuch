@@ -468,7 +468,16 @@ section {
 }
 
 .price-list .sub-item {
-    padding-left: 15px; 
+    padding-left: 15px;
+}
+
+.price-note {
+    margin: 18px 0 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--gold-color);
+    text-align: left;
 }
 
 .sub-group {
