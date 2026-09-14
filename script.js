@@ -1,274 +1,427 @@
-/* ═══════════════════════════════════════════════
-   Лендинг «Косметология с 0»
-   ═══════════════════════════════════════════════ */
+/* ==========================================================================
+   SHANICOSMO — ИНТЕРАКТИВ (V2)
+   --------------------------------------------------------------------------
+   1.  Настройки и утилиты
+   2.  Прелоадер
+   3.  Разбивка заголовков на слова
+   4.  Появление при скролле (+ каскад)
+   5.  Хидер
+   6.  Прогресс скролла и кнопка «наверх»
+   7.  Параллакс
+   8.  Мобильное меню
+   9.  Счётчики
+   10. Магнитные кнопки
+   11. Таймлайн с заливкой
+   12. Единый скролл-цикл
+   13. Аура курсора
+   14. Аккордеоны
+   ========================================================================== */
 
-/* ──────────────────────────────────────────────
-   НАСТРОЙКА: замените на реальный ник Telegram
-   ────────────────────────────────────────────── */
-const TG_USERNAME = 'dr_shanicosm';
-const TG_TEXT = 'Добрый день! Хочу записаться на обучение';
+(function () {
+    'use strict';
 
-const TG_LINK = `https://t.me/${TG_USERNAME}?text=${encodeURIComponent(TG_TEXT)}`;
+    /* ======================================================================
+       1. НАСТРОЙКИ И УТИЛИТЫ
+       ====================================================================== */
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
 
-document.querySelectorAll('.js-tg').forEach(el => {
-  el.href = TG_LINK;
-  el.target = '_blank';
-  el.rel = 'noopener';
-});
+    const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.prototype.slice.call(root.querySelectorAll(sel));
 
-/* ── Дата ближайшего потока: следующее 7-е число ── */
-(() => {
-  const MONTHS = ['января','февраля','марта','апреля','мая','июня',
-                  'июля','августа','сентября','октября','ноября','декабря'];
-  const now = new Date();
-  const d = new Date(now.getFullYear(), now.getMonth(), 7);
+    // страница всегда открывается сверху
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
 
-  // если 7-е уже прошло — берём следующий месяц
-  if (d < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
-    d.setMonth(d.getMonth() + 1);
-  }
+    /* ======================================================================
+       2. ПРЕЛОАДЕР
+       ====================================================================== */
+    const preloader = $('#preloader');
+    const MIN_PRELOAD = reduceMotion ? 0 : 700;
+    const startedAt = Date.now();
+    let introDone = false;
 
-  const label = `7 ${MONTHS[d.getMonth()]}`;
-  document.querySelectorAll('.js-stream').forEach(el => { el.textContent = label; });
-})();
+    function finishIntro() {
+        if (introDone) return;
+        introDone = true;
+        document.body.classList.add('is-ready');
+        if (!preloader) return;
+        preloader.classList.add('is-done');
+        setTimeout(() => preloader.remove(), 800);
+    }
 
-/* ── Полоса прогресса чтения ── */
-(() => {
-  const bar = document.getElementById('progress');
-  if (!bar) return;
+    function scheduleIntro() {
+        const waited = Date.now() - startedAt;
+        setTimeout(finishIntro, Math.max(MIN_PRELOAD - waited, 0));
+    }
 
-  let ticking = false;
-  const update = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = max > 0 ? `${(window.scrollY / max) * 100}%` : '0%';
-    ticking = false;
-  };
+    window.addEventListener('load', scheduleIntro);
+    // подстраховка: не держим прелоадер дольше 2.5 с, даже если ресурс зависнет
+    setTimeout(finishIntro, 2500);
 
-  addEventListener('scroll', () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
-  }, { passive: true });
-  update();
-})();
+    // Предохранитель: если что-то упадёт, контент всё равно должен стать видимым,
+    // иначе посетитель увидит пустую страницу вместо сайта.
+    function revealEverything() {
+        $$('[data-reveal], [data-split]').forEach((el) => {
+            el.classList.add('is-in');
+            if (el.hasAttribute('data-split')) el.classList.add('is-split-in');
+        });
+        $$('[data-reveal-stagger]').forEach((el) => el.classList.add('is-ready'));
+        finishIntro();
+    }
+    window.addEventListener('error', revealEverything);
 
-/* ── Появление блоков при скролле ──
-   Важно: анимация здесь — украшение, а не условие видимости.
-   Если наблюдатель не сработает, всё раскрывается по таймеру. */
-(() => {
-  // первый экран анимируется на загрузке (CSS), наблюдатель ему не нужен
-  const items = [...document.querySelectorAll('.reveal:not(.hero .reveal)')];
-  const show = el => el.classList.add('is-in');
-  const showAll = () => items.forEach(show);
+    /* ======================================================================
+       3. РАЗБИВКА ЗАГОЛОВКОВ НА СЛОВА
+       Обходим только текстовые узлы, поэтому <br> и <span> сохраняются.
+       ====================================================================== */
+    let wordIndex = 0;
 
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced || !('IntersectionObserver' in window)) { showAll(); return; }
+    function splitNode(node) {
+        Array.prototype.slice.call(node.childNodes).forEach((child) => {
+            if (child.nodeType === Node.TEXT_NODE) {
+                const words = child.textContent.split(/(\s+)/);
+                if (!words.length) return;
+                const frag = document.createDocumentFragment();
+                words.forEach((chunk) => {
+                    if (!chunk) return;
+                    if (/^\s+$/.test(chunk)) {
+                        frag.appendChild(document.createTextNode(' '));
+                        return;
+                    }
+                    const outer = document.createElement('span');
+                    outer.className = 'w';
+                    const inner = document.createElement('span');
+                    inner.className = 'w-in';
+                    inner.textContent = chunk;
+                    inner.style.setProperty('--i', wordIndex++);
+                    outer.appendChild(inner);
+                    frag.appendChild(outer);
+                });
+                child.parentNode.replaceChild(frag, child);
+            } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
+                splitNode(child);
+            }
+        });
+    }
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      show(entry.target);
-      io.unobserve(entry.target);
+    const splitTargets = $$('[data-split]');
+    splitTargets.forEach((el) => {
+        wordIndex = 0;
+        splitNode(el);
     });
-  }, { rootMargin: '200px 0px 0px 0px', threshold: 0 });
 
-  items.forEach(el => io.observe(el));
-
-  // всё, что уже в зоне видимости на момент загрузки — показываем сразу
-  const sweep = () => {
-    const limit = innerHeight + 200;
-    items.forEach(el => {
-      const r = el.getBoundingClientRect();
-      if (r.top < limit && r.bottom > -200) show(el);
+    /* ======================================================================
+       4. ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ (+ КАСКАД)
+       ====================================================================== */
+    // раскладываем задержки по детям каскадных контейнеров
+    $$('[data-reveal-stagger]').forEach((parent) => {
+        const variant = parent.getAttribute('data-reveal-stagger') || 'up';
+        let i = 0;
+        Array.prototype.slice.call(parent.children).forEach((child) => {
+            if (child.hasAttribute('data-reveal')) return;
+            child.setAttribute('data-reveal', variant);
+            child.style.setProperty('--rd', (i * 0.09).toFixed(2) + 's');
+            i += 1;
+        });
+        parent.classList.add('is-ready');
     });
-  };
-  addEventListener('load', sweep);
-  requestAnimationFrame(sweep);
 
-  // страховка: что бы ни случилось, через 2 секунды контент виден
-  setTimeout(showAll, 2000);
-})();
+    // индивидуальные задержки
+    $$('[data-reveal-delay]').forEach((el) => {
+        el.style.setProperty('--rd', parseFloat(el.getAttribute('data-reveal-delay')) + 's');
+    });
 
-/* ── Sticky-кнопка: появляется после первого экрана ── */
-(() => {
-  const sticky = document.getElementById('sticky');
-  const hero = document.querySelector('.hero');
-  if (!sticky || !hero || !('IntersectionObserver' in window)) return;
+    const revealTargets = $$('[data-reveal], [data-split]');
 
-  new IntersectionObserver(([entry]) => {
-    sticky.classList.toggle('is-on', !entry.isIntersecting);
-  }, { threshold: 0 }).observe(hero);
-})();
+    if (!('IntersectionObserver' in window) || reduceMotion) {
+        revealTargets.forEach((el) => {
+            el.classList.add('is-in');
+            if (el.hasAttribute('data-split')) el.classList.add('is-split-in');
+        });
+    } else {
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                el.classList.add('is-in');
+                if (el.hasAttribute('data-split')) el.classList.add('is-split-in');
+                revealObserver.unobserve(el);
+            });
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
 
-/* ── Подсветка активного пункта навигации ── */
-(() => {
-  const links = [...document.querySelectorAll('.hdr__nav a')];
-  const map = new Map();
+        revealTargets.forEach((el) => revealObserver.observe(el));
+    }
 
-  links.forEach(link => {
-    const section = document.querySelector(link.getAttribute('href'));
-    if (section) map.set(section, link);
-  });
-  if (!map.size || !('IntersectionObserver' in window)) return;
+    /* ======================================================================
+       5. ХИДЕР
+       ====================================================================== */
+    const header = $('.header');
+    let lastScroll = window.pageYOffset;
 
-  const visible = new Set();
+    function updateHeader(scrollY) {
+        if (!header) return;
+        header.classList.toggle('is-scrolled', scrollY > 40);
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
+        const menuOpen = nav && nav.classList.contains('open');
+        const goingDown = scrollY > lastScroll;
+        if (!menuOpen && goingDown && scrollY > 260) {
+            header.classList.add('is-hidden');
+        } else {
+            header.classList.remove('is-hidden');
+        }
+        lastScroll = scrollY;
+    }
 
-    // активен самый верхний из видимых разделов
-    const top = [...visible].sort((a, b) => a.offsetTop - b.offsetTop)[0];
-    links.forEach(l => l.classList.toggle('is-active', top ? map.get(top) === l : false));
-  }, { rootMargin: '-20% 0px -60% 0px' });
+    /* ======================================================================
+       6. ПРОГРЕСС СКРОЛЛА И КНОПКА «НАВЕРХ»
+       ====================================================================== */
+    const progressBar = $('#scrollProgress');
+    const backToTop = $('#backToTop');
+    const bttBar = $('.btt-bar');
+    const RING = 126; // длина окружности r=20
 
-  map.forEach((_, section) => io.observe(section));
-})();
+    function updateProgress(scrollY) {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - doc.clientHeight;
+        const ratio = max > 0 ? clamp(scrollY / max, 0, 1) : 0;
 
-/* ── Аккордеон модулей: плавное раскрытие, открыт только один пункт ──
-   <details> по умолчанию переключается мгновенно — высоту анимируем
-   вручную (Web Animations API), сам браузер отвечает только за то,
-   что доступ к контенту закрытого модуля скрыт от скринридеров/поиска. */
-(() => {
-  const modules = [...document.querySelectorAll('#modules .mod')];
-  if (!modules.length) return;
+        if (progressBar) progressBar.style.width = (ratio * 100).toFixed(2) + '%';
+        if (bttBar) bttBar.style.strokeDashoffset = (RING - RING * ratio).toFixed(1);
+        if (backToTop) backToTop.classList.toggle('visible', scrollY > 520);
+    }
 
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const DURATION = 380;
-  const EASE = 'cubic-bezier(.22,.68,.24,1)';
-  const running = new WeakMap();
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        });
+    }
 
-  const animateHeight = (el, from, to, onDone) => {
-    running.get(el)?.cancel();
-    if (reduced) { onDone(); return; }
-    el.style.overflow = 'hidden';
-    const anim = el.animate(
-      [{ height: `${from}px` }, { height: `${to}px` }],
-      { duration: DURATION, easing: EASE, fill: 'both' }
-    );
-    running.set(el, anim);
-    anim.onfinish = () => {
-      running.delete(el);
-      onDone();
-      anim.cancel();
-      el.style.overflow = '';
+    /* ======================================================================
+       7. ПАРАЛЛАКС
+       ====================================================================== */
+    const parallaxItems = $$('[data-parallax]').map((el) => ({
+        el: el,
+        speed: parseFloat(el.getAttribute('data-parallax')) || 0.08
+    }));
+
+    function updateParallax() {
+        if (reduceMotion) return;
+        const vh = window.innerHeight;
+        parallaxItems.forEach((item) => {
+            const rect = item.el.getBoundingClientRect();
+            if (rect.bottom < -240 || rect.top > vh + 240) return;
+            const centerOffset = rect.top + rect.height / 2 - vh / 2;
+            item.el.style.setProperty('--py', (-centerOffset * item.speed).toFixed(2) + 'px');
+        });
+    }
+
+    /* ======================================================================
+       8. МОБИЛЬНОЕ МЕНЮ
+       ====================================================================== */
+    const nav = $('#mainNav');
+    const navToggle = $('#navToggle');
+    const navBackdrop = $('#navBackdrop');
+
+    function setNav(open) {
+        if (!nav) return;
+        nav.classList.toggle('open', open);
+        if (navToggle) {
+            navToggle.classList.toggle('active', open);
+            navToggle.setAttribute('aria-expanded', String(open));
+        }
+        if (navBackdrop) navBackdrop.classList.toggle('open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => setNav(!nav.classList.contains('open')));
+    }
+    if (navBackdrop) navBackdrop.addEventListener('click', () => setNav(false));
+    if (nav) $$('a', nav).forEach((a) => a.addEventListener('click', () => setNav(false)));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setNav(false);
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 600) setNav(false);
+    });
+
+    /* ======================================================================
+       9. СЧЁТЧИКИ
+       ====================================================================== */
+    const counters = $$('.count-up');
+    if (counters.length && 'IntersectionObserver' in window) {
+        const countObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                const suffix = el.getAttribute('data-suffix') || '';
+                countObserver.unobserve(el);
+
+                if (reduceMotion) {
+                    el.textContent = target + suffix;
+                    return;
+                }
+
+                const duration = 1700;
+                const start = performance.now();
+                (function tick(now) {
+                    const p = clamp((now - start) / duration, 0, 1);
+                    const eased = 1 - Math.pow(1 - p, 3);
+                    el.textContent = Math.round(eased * target) + suffix;
+                    if (p < 1) requestAnimationFrame(tick);
+                })(start);
+            });
+        }, { threshold: 0.5 });
+        counters.forEach((el) => countObserver.observe(el));
+    }
+
+    /* ======================================================================
+       10. МАГНИТНЫЕ КНОПКИ
+       ====================================================================== */
+    if (finePointer && !reduceMotion) {
+        $$('.magnetic').forEach((btn) => {
+            btn.addEventListener('mousemove', (e) => {
+                const r = btn.getBoundingClientRect();
+                const x = (e.clientX - r.left - r.width / 2) * 0.18;
+                const y = (e.clientY - r.top - r.height / 2) * 0.28;
+                btn.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = '';
+            });
+        });
+    }
+
+    /* ======================================================================
+       11. ТАЙМЛАЙН С ЗАЛИВКОЙ
+       ====================================================================== */
+    const timeline = $('.timeline');
+    const timelineFill = $('.timeline-fill');
+    const timelineItems = $$('.timeline-item');
+
+    function updateTimeline() {
+        if (!timeline || !timelineFill) return;
+        const rect = timeline.getBoundingClientRect();
+        const anchor = window.innerHeight * 0.72;
+        const progress = clamp((anchor - rect.top) / rect.height, 0, 1);
+        timelineFill.style.height = (progress * 100).toFixed(1) + '%';
+
+        timelineItems.forEach((item) => {
+            const top = item.getBoundingClientRect().top;
+            item.classList.toggle('lit', top < anchor);
+        });
+    }
+
+    /* ======================================================================
+       12. ЕДИНЫЙ СКРОЛЛ-ЦИКЛ
+       ====================================================================== */
+    let ticking = false;
+    let velocity = 0;
+    let prevScroll = window.pageYOffset;
+
+    function onFrame() {
+        const scrollY = window.pageYOffset;
+
+        // сглаженная скорость прокрутки в диапазоне -1..1 (для бегущей строки)
+        const raw = clamp((scrollY - prevScroll) / 44, -1, 1);
+        velocity += (raw - velocity) * 0.14;
+        prevScroll = scrollY;
+        document.documentElement.style.setProperty('--vel', velocity.toFixed(3));
+
+        updateProgress(scrollY);
+        updateHeader(scrollY);
+        updateParallax();
+        updateTimeline();
+
+        ticking = false;
+
+        // пока строка «оттягивается», продолжаем кадры до полного затухания
+        if (Math.abs(velocity) > 0.004) requestFrame();
+    }
+
+    function requestFrame() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(onFrame);
+    }
+
+    window.addEventListener('scroll', requestFrame, { passive: true });
+    window.addEventListener('resize', requestFrame);
+    requestFrame();
+
+    /* ======================================================================
+       13. АУРА КУРСОРА
+       ====================================================================== */
+    const aura = $('#cursorAura');
+    if (aura && finePointer && !reduceMotion) {
+        let tx = -100, ty = -100, cx = -100, cy = -100, auraRunning = false;
+
+        function auraFrame() {
+            cx += (tx - cx) * 0.18;
+            cy += (ty - cy) * 0.18;
+            aura.style.transform = 'translate3d(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px,0)';
+            if (Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3) {
+                requestAnimationFrame(auraFrame);
+            } else {
+                auraRunning = false;
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            tx = e.clientX;
+            ty = e.clientY;
+            aura.classList.add('is-on');
+            if (!auraRunning) {
+                auraRunning = true;
+                requestAnimationFrame(auraFrame);
+            }
+        }, { passive: true });
+
+        document.addEventListener('mouseleave', () => aura.classList.remove('is-on'));
+
+        const hotSelector = 'a, button, .accordion-header, .service-mini-card';
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest(hotSelector)) aura.classList.add('is-hot');
+        });
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest(hotSelector)) aura.classList.remove('is-hot');
+        });
+    }
+
+    /* ======================================================================
+       14. АККОРДЕОНЫ
+       ====================================================================== */
+    // нумеруем строки внутри каждой группы — CSS раскрывает их каскадом
+    $$('.accordion-item').forEach((item) => {
+        $$('.price-list li, .sub-group', item).forEach((row, i) => {
+            row.style.setProperty('--i', i);
+        });
+    });
+
+    window.toggleAccordion = function (element) {
+        const item = element.parentElement;
+        const isOpen = item.classList.contains('active');
+
+        $$('.accordion-item').forEach((other) => other.classList.remove('active'));
+        if (isOpen) return;
+
+        item.classList.add('active');
+
+        // если раскрытый блок ушёл за край экрана — аккуратно подводим к нему
+        setTimeout(() => {
+            const rect = item.getBoundingClientRect();
+            if (rect.top < 90) {
+                window.scrollTo({
+                    top: rect.top + window.pageYOffset - 110,
+                    behavior: reduceMotion ? 'auto' : 'smooth'
+                });
+            }
+        }, 260);
     };
-    anim.oncancel = () => running.delete(el);
-  };
-
-  const collapse = item => {
-    const inner = item.querySelector('.mod__in');
-    if (!inner || !item.open) return;
-    const from = inner.offsetHeight;
-    animateHeight(inner, from, 0, () => { item.open = false; });
-  };
-
-  const expand = item => {
-    item.open = true;
-    const inner = item.querySelector('.mod__in');
-    if (!inner) return;
-    const to = inner.scrollHeight;
-    animateHeight(inner, 0, to, () => {});
-  };
-
-  modules.forEach(item => {
-    const head = item.querySelector('.mod__head');
-    head.addEventListener('click', e => {
-      e.preventDefault();
-      if (item.open) { collapse(item); return; }
-      modules.forEach(other => { if (other !== item && other.open) collapse(other); });
-      expand(item);
-    });
-  });
-})();
-
-/* ── Лайтбокс отзывов: открыть, листать стрелками/свайпом/клавиатурой ── */
-(() => {
-  const lb = document.getElementById('lightbox');
-  const revs = document.getElementById('revs');
-  if (!lb || !revs) return;
-
-  const items = [...revs.querySelectorAll('.ph__zoom img')];
-  if (!items.length) return;
-
-  const img = lb.querySelector('.lb__img');
-  const count = lb.querySelector('.lb__count');
-  const btnClose = lb.querySelector('.lb__x');
-  const btnPrev = lb.querySelector('.lb__prev');
-  const btnNext = lb.querySelector('.lb__next');
-
-  let index = 0;
-  let trigger = null;
-
-  const show = i => {
-    index = (i + items.length) % items.length;
-    const src = items[index];
-    img.src = src.currentSrc || src.src;
-    img.alt = src.alt;
-    count.textContent = `${index + 1} / ${items.length}`;
-  };
-
-  const open = i => {
-    trigger = document.activeElement;
-    show(i);
-    lb.classList.add('is-open');
-    lb.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    btnClose.focus();
-  };
-
-  const close = () => {
-    lb.classList.remove('is-open');
-    lb.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    trigger?.focus();
-  };
-
-  items.forEach((image, i) => {
-    image.closest('.ph__zoom').addEventListener('click', () => open(i));
-  });
-
-  btnClose.addEventListener('click', close);
-  btnPrev.addEventListener('click', () => show(index - 1));
-  btnNext.addEventListener('click', () => show(index + 1));
-
-  lb.addEventListener('click', e => {
-    if (e.target === lb) close();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (!lb.classList.contains('is-open')) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') show(index - 1);
-    if (e.key === 'ArrowRight') show(index + 1);
-  });
-
-  // свайп по фото
-  let touchX = null;
-  const frame = lb.querySelector('.lb__frame');
-  frame.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
-  frame.addEventListener('touchend', e => {
-    if (touchX === null) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 40) show(index + (dx < 0 ? 1 : -1));
-    touchX = null;
-  });
-})();
-
-/* ── Плавный скролл с учётом высоты шапки ── */
-(() => {
-  const header = document.querySelector('.hdr');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const id = link.getAttribute('href');
-      if (id === '#' || id.length < 2) return;
-
-      const target = document.querySelector(id);
-      if (!target) return;
-
-      e.preventDefault();
-      const offset = (header?.offsetHeight ?? 0) + 12;
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
-    });
-  });
 })();
