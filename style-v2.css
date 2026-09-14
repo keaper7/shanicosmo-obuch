@@ -1452,3 +1452,38 @@ a, button { -webkit-tap-highlight-color: transparent; }
     [data-parallax] { transform: none !important; }
     .grain, .cursor-aura { display: none !important; }
 }
+
+/* Имя вместо латинского логотипа: без капса и разрядки, как на сайте обучения */
+.logo.logo--name {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-size: clamp(20px, 1.8vw, 26px);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.footer-logo.logo--name { font-size: 26px; }
+
+/* «Эстетика и комфорт» на телефонах: базовый слой оставлял сдвиг left:10% при ширине 100%,
+   блок уезжал за экран и обрезал фото. Высоту задаёт большое фото, малое накладывается поверх. */
+@media (max-width: 768px) {
+    .atmosphere-images {
+        left: 0;
+        width: 100%;
+        min-height: 0;
+        margin-bottom: 28px;
+    }
+    .img-large {
+        position: relative;
+        display: block;
+        right: auto;
+        width: 80%;
+        margin-left: auto;
+    }
+    .img-small {
+        left: 0;
+        top: auto;
+        bottom: -28px;
+        width: 50%;
+        border-width: 6px;
+    }
+}
